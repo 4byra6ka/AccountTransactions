@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "coursework-module-3"
+version = "0.1.0"
+description = "Курсовой проект по курсу «Основы backend-разработки»"
+authors = ["GAU <gau@1jz.ru>"]
+readme = "README.md"
+packages = [{include = "coursework_module_3"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
