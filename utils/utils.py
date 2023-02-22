@@ -28,7 +28,7 @@ def list_operations(json_transactions):
         if transaction.setdefault('state') in [None, "CANCELED"]:
             continue
         dt_transaction = dt.strptime(transaction.setdefault('date'), "%Y-%m-%dT%H:%M:%S.%f")
-        add_transaction = operation(id=transaction.setdefault('id'),
+        add_transaction = Operation(id=transaction.setdefault('id'),
                                     state=transaction.setdefault('state'),
                                     date=dt_transaction,
                                     amount=transaction['operationAmount'].setdefault('amount'),
