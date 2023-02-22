@@ -14,6 +14,20 @@ def load_operations(url):
     return load.json()
 
 
+def data_masking(disguise: str | None):
+    """
+    Маскировка данных карт в формате XXXX XX** **** XXXX и счетов в формате **XXXX
+    :param disguise: str данные
+    :return: str маскированные данные
+    """
+    if disguise is None:
+        return None
+    if disguise[-20:].isdigit():
+        return disguise[-len(disguise):-20] + '**' + disguise[-4:]
+    if disguise[-16:].isdigit():
+        return disguise[-len(disguise):-16] + disguise[-16:-12] + " " + disguise[-12:-10] + "** **** " + disguise[-4:]
+
+
 def list_operations(json_transactions):
     """
     Загрузка операций в класс и предоставления списка из 5-и последних операций
@@ -35,8 +49,8 @@ def list_operations(json_transactions):
                                     name=transaction['operationAmount']['currency'].setdefault('name'),
                                     code=transaction['operationAmount']['currency'].setdefault('code'),
                                     description=transaction.setdefault('description'),
-                                    from_=transaction.setdefault('from'),
-                                    to=transaction.setdefault('to')
+                                    from_=data_masking(transaction.setdefault('from')),
+                                    to=data_masking(transaction.setdefault('to'))
                                     )
         if len(list_transactions) == 0:
             list_transactions.append(add_transaction)
