@@ -1,6 +1,7 @@
 import requests
-from datetime import datetime as dt
 from dto.operation import *
+
+
 def load_operations(url):
     """
     Загрузка операций по транзакциям в формате JSON
@@ -12,9 +13,10 @@ def load_operations(url):
         return NameError(f"Удаленный сервер не отвечает {load.status_code}")
     return load.json()
 
+
 def list_operations(json_transactions):
     """
-    Загрузка в опараций в класс и предоставления списка из 5-и последних операций
+    Загрузка операций в класс и предоставления списка из 5-и последних операций
     :param json_transactions: JSON всех транзакций
     :return: List 5-и последних транзакций
     """
@@ -25,9 +27,10 @@ def list_operations(json_transactions):
             continue
         if transaction.setdefault('state') in [None, "CANCELED"]:
             continue
+        dt_transaction = dt.strptime(transaction.setdefault('date'), "%Y-%m-%dT%H:%M:%S.%f")
         add_transaction = operation(id=transaction.setdefault('id'),
                                     state=transaction.setdefault('state'),
-                                    date=transaction.setdefault('date'),
+                                    date=dt_transaction,
                                     amount=transaction['operationAmount'].setdefault('amount'),
                                     name=transaction['operationAmount']['currency'].setdefault('name'),
                                     code=transaction['operationAmount']['currency'].setdefault('code'),
@@ -38,10 +41,8 @@ def list_operations(json_transactions):
         if len(list_transactions) == 0:
             list_transactions.append(add_transaction)
             continue
-
-        dt_transaction = dt.strptime(transaction.setdefault('date'), "%Y-%m-%dT%H:%M:%S.%f")
         for x in range(len(list_transactions)):
-            dt_list_transaction = dt.strptime(list_transactions[x].get_date(), "%Y-%m-%dT%H:%M:%S.%f")
+            dt_list_transaction = list_transactions[x].get_date()
             if dt_transaction > dt_list_transaction:
                 list_transactions.insert(x, add_transaction)
                 break
@@ -52,4 +53,3 @@ def list_operations(json_transactions):
         if len(list_transactions) > 5:
             list_transactions.pop()
     return list_transactions
-
