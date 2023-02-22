@@ -1,4 +1,5 @@
 import requests
+from datetime import datetime as dt
 from dto.operation import *
 def load_operations(url):
     """
@@ -13,26 +14,42 @@ def load_operations(url):
 
 def list_operations(json_transactions):
     """
-    Загрузка в опараций в класс и предоставления списка
+    Загрузка в опараций в класс и предоставления списка из 5-и последних операций
     :param json_transactions: JSON всех транзакций
-    :return: List транзакций
+    :return: List 5-и последних транзакций
     """
+
     list_transactions = []
     for transaction in json_transactions:
         if transaction == {}:
             continue
         if transaction.setdefault('state') in [None, "CANCELED"]:
             continue
-        list_transactions.append(
-            operation(id=transaction.setdefault('id'),
-                      state=transaction.setdefault('state'),
-                      date=transaction.setdefault('date'),
-                      amount=transaction['operationAmount'].setdefault('amount'),
-                      name=transaction['operationAmount']['currency'].setdefault('name'),
-                      code=transaction['operationAmount']['currency'].setdefault('code'),
-                      description=transaction.setdefault('description'),
-                      from_=transaction.setdefault('from'),
-                      to=transaction.setdefault('to'))
-        )
+        add_transaction = operation(id=transaction.setdefault('id'),
+                                    state=transaction.setdefault('state'),
+                                    date=transaction.setdefault('date'),
+                                    amount=transaction['operationAmount'].setdefault('amount'),
+                                    name=transaction['operationAmount']['currency'].setdefault('name'),
+                                    code=transaction['operationAmount']['currency'].setdefault('code'),
+                                    description=transaction.setdefault('description'),
+                                    from_=transaction.setdefault('from'),
+                                    to=transaction.setdefault('to')
+                                    )
+        if len(list_transactions) == 0:
+            list_transactions.append(add_transaction)
+            continue
+
+        dt_transaction = dt.strptime(transaction.setdefault('date'), "%Y-%m-%dT%H:%M:%S.%f")
+        for x in range(len(list_transactions)):
+            dt_list_transaction = dt.strptime(list_transactions[x].get_date(), "%Y-%m-%dT%H:%M:%S.%f")
+            if dt_transaction > dt_list_transaction:
+                list_transactions.insert(x, add_transaction)
+                break
+            elif dt_transaction < dt_list_transaction and x + 1 == len(list_transactions):
+                list_transactions.append(add_transaction)
+            elif dt_transaction < dt_list_transaction:
+                continue
+        if len(list_transactions) > 5:
+            list_transactions.pop()
     return list_transactions
 
