@@ -10,6 +10,7 @@ def main():
                      "id=f11058ed-10ad-42ea-a13d-aad1945e5421&table=block&spaceId=0771f0bb-b4cb-4a14-bc05-" \
                      "94cbd33fc70d&name=operations.json&cache=v2"
     list_5_operations = list_operations(load_operations(url_operations))
+    print()
     for operation in list_5_operations:
         print(operation.get_print_operation())
         print()

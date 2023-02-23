@@ -65,3 +65,10 @@
 - [ ]  К проекту написали тесты с покрытием не менее 80%.
 - [ ]  Тесты написали на `pytest` или `unittest`.
 - [ ]  Проект структурированный, читаемый, каждая функция — не более 50 строк.
+***
+### Разворачивание виджета «Операции по счетам»
+    git cline https://github.com/4byra6ka/Coursework_module_3.git
+    cd Coursework_module_3
+    poetry install
+    poetry run main.py
+    poetry run  pytest --cov
