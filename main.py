@@ -14,6 +14,5 @@ def main():
         print(operation.get_print_operation())
         print()
 
-
 if __name__ == "__main__":
     main()

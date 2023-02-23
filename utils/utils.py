@@ -10,7 +10,7 @@ def load_operations(url):
     """
     load = requests.get(url=url)
     if load.status_code != 200:
-        return NameError(f"Удаленный сервер не отвечает {load.status_code}")
+        raise NameError(f"Удаленный сервер не отвечает {load.status_code}")
     return load.json()
 
 
@@ -34,7 +34,8 @@ def list_operations(json_transactions):
     :param json_transactions: JSON всех транзакций
     :return: List 5-и последних транзакций
     """
-
+    if json_transactions is None:
+        raise NameError(f"Список пуст {type(json_transactions)}")
     list_transactions = []
     for transaction in json_transactions:
         if transaction == {}:

@@ -15,6 +15,8 @@ class Operation:
         return f'id = {self.id}, state = {self.state}, date = {self.date}, description = {self.description}, ' \
                f'from_ = {self.from_}, to = {self.to}'
 
+    def get_id(self):
+        return self.id
     def get_date(self):
         return self.date
 
